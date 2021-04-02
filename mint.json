@@ -3,11 +3,11 @@
   "application": {
     "head": "assets/head.html",
     "title": "Mint Exchange Rate",
-    "icon": "assets/favicon.png"
+    "icon": "assets/icon.png"
   },
   "source-directories": ["source"],
   "test-directories": ["tests"],
   "external": {
-    "stylesheets": ["source/styles/main.scss"]
+    "stylesheets": ["assets/main.css"]
   }
 }
