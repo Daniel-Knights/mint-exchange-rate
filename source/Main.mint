@@ -18,10 +18,10 @@ component Main {
     <div::base>
       case (page) {
         Page::Home =>
-          <Home/>
+          <Pages.Home/>
 
         Page::NotFound =>
-          <NotFound/>
+          <Pages.NotFound/>
       }
     </div>
   }

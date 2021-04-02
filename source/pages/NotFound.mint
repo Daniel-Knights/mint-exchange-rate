@@ -1,4 +1,4 @@
-component NotFound {
+component Pages.NotFound {
   style base {
     text-align: center;
   }
