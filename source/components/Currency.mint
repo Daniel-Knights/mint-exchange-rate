@@ -1,8 +1,3 @@
-record InputValues {
-  amount : String,
-  locale : String
-}
-
 component Currency {
   style currency {
     display: flex;
@@ -13,8 +8,9 @@ component Currency {
   property readonly : Bool = false
   property placeholder : String
   property result = 0
+  property defaultLocale : String = "GBP"
 
-  state amount : String = "0"
+  state amount : String = ""
   state locale : String = "GBP"
 
   fun setStateAndEmit (e : Html.Event) {
@@ -42,16 +38,18 @@ component Currency {
         <input
           class="interactive"
           type="number"
-          readonly={readonly}
-          placeholder={placeholder}
+          readonly={true}
           onInput={setStateAndEmit}
-          value="#{result}"/>
+          value="#{result}"
+          step="0.01"/>
       } else {
         <input
           class="interactive"
           type="number"
           placeholder={placeholder}
-          onInput={setStateAndEmit}/>
+          onInput={setStateAndEmit}
+          validate="false"
+          step="0.01"/>
       }
 
       <select
@@ -59,9 +57,19 @@ component Currency {
         class="interactive">
 
         for (currency of Currencies.abbreviations) {
-          <option value="#{currency}">
-            <{ currency }>
-          </option>
+          if (currency == defaultLocale) {
+            <option
+              value={currency}
+              selected="true">
+
+              <{ currency }>
+
+            </option>
+          } else {
+            <option value={currency}>
+              <{ currency }>
+            </option>
+          }
         }
 
       </select>

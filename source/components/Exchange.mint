@@ -1,4 +1,6 @@
 component Exchange {
+  connect Conversion.Store exposing { result, setStatusMessage, requestConversion }
+
   style base {
     display: flex;
     align-items: center;
@@ -10,27 +12,30 @@ component Exchange {
   }
 
   state baseValues : InputValues = InputValues("0", "GBP")
-  state compareValues : InputValues = InputValues("0", "GBP")
+  state compareLocale : String = "USD"
 
   fun updateBaseValues (values : InputValues) : Promise(Never, Void) {
     next { baseValues = values }
   }
 
-  fun updateCompareValues (values : InputValues) : Promise(Never, Void) {
-    next { compareValues = values }
+  fun updateCompareLocale (values : InputValues) : Promise(Never, Void) {
+    next { compareLocale = values.locale }
+  }
+
+  fun handleSubmit (e : Html.Event) {
+    sequence {
+      Html.Event.preventDefault(e)
+
+      if (baseValues.amount == "0") {
+        setStatusMessage("Invalid amount")
+      } else {
+        requestConversion("#{baseValues.locale}/#{compareLocale}/#{baseValues.amount}")
+      }
+    }
   }
 
   fun render : Html {
-    <form::base
-      onSubmit={
-        (e : Html.Event) {
-          sequence {
-            Html.Event.preventDefault(e)
-            Conversion.Store.requestConversion("#{baseValues.locale}/#{compareValues.locale}/#{baseValues.amount}")
-          }
-        }
-      }>
-
+    <form::base onSubmit={handleSubmit}>
       <div::currencies>
         <Currency
           onDataChange={updateBaseValues}
@@ -39,16 +44,16 @@ component Exchange {
         ":"
 
         <Currency
-          onDataChange={updateCompareValues}
+          onDataChange={updateCompareLocale}
           readonly={true}
-          placeholder="Result"
-          result={Conversion.Store.result}/>
+          placeholder=""
+          result={result}
+          defaultLocale="USD"/>
       </div>
 
       <button class="interactive">
-        "Convert"
+        "CONVERT"
       </button>
-
     </form>
   }
 }

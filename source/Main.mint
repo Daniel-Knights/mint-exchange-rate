@@ -1,5 +1,6 @@
 component Main {
   connect Application exposing { page }
+  connect Conversion.Store exposing { statusMessage }
 
   style base {
     display: flex;
@@ -22,6 +23,10 @@ component Main {
 
         Page::NotFound =>
           <Pages.NotFound/>
+      }
+
+      if (!String.isEmpty(statusMessage)) {
+        <Status/>
       }
     </div>
   }

@@ -14,6 +14,21 @@ record Response {
 
 store Conversion.Store {
   state result = 0
+  state statusMessage = ""
+
+  fun setStatusMessage (msg : String) {
+    sequence {
+      next { statusMessage = msg }
+
+      Timer.timeout(5000, "")
+
+      next { statusMessage = "" }
+    }
+  }
+
+  fun setErrorStatus {
+    setStatusMessage("Unable to run conversion, please try again")
+  }
 
   fun requestConversion (query : String) : Promise(Never, Void) {
     sequence {
@@ -32,12 +47,21 @@ store Conversion.Store {
 
         next { result = decodedObject.conversionResult }
       } catch String => error {
-        next {  }
+        sequence {
+          Debug.log(error)
+          setErrorStatus()
+        }
       } catch Object.Error => error {
-        next {  }
+        sequence {
+          Debug.log(error)
+          setErrorStatus()
+        }
       }
     } catch Http.ErrorResponse => error {
-      next {  }
+      sequence {
+        Debug.log(error)
+        setErrorStatus()
+      }
     }
   }
 }
