@@ -5,6 +5,7 @@ component Exchange {
     display: flex;
     align-items: center;
     flex-direction: column;
+    position: relative;
   }
 
   style currencies {
